@@ -1,8 +1,10 @@
-import { selectUsuarios, selectUsuario } from "./bd.js";
+import { selectUsuarios, selectUsuario, insertUsuario } from "./bd.js";
 import dotenv from "dotenv";
 import express from "express";     
 const app = express();              
 const port = 3000;                  
+
+app.use(express.json());
 
 app.get("/", (req, res) => {       
   res.json({
@@ -37,3 +39,13 @@ app.get("/usuario/:id", async (req, res) => {
     res.status(error.status || 500).json({ message: error.message || "Erro!" });
   }
 });
+
+  app.post("/usuario", async (req, res) => {
+    console.log("Rota POST /usuario solicitada");
+    try {
+      await insertUsuario(req.body);
+      res.status(201).json({ message: "Usuário inserido com sucesso!" });
+    } catch (error) {
+      res.status(error.status || 500).json({ message: error.message || "Erro!" });
+    }
+  });
